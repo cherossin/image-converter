@@ -3,99 +3,256 @@ html,
 body {
     margin: 0;
     padding: 0;
-    height: 100%;
-    overflow: hidden;
-    /* 스크롤 제거 */
+    min-height: 100%;
+    /* overflow: hidden; 제거 - 스크롤 허용 */
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
     display: flex;
-    /* Flexbox 적용 */
     justify-content: center;
-    /* 수평 중앙 정렬 */
     align-items: center;
-    /* 수직 중앙 정렬 */
+    padding: 20px; /* 모바일 여백 */
+    box-sizing: border-box;
 }
 
 .container {
     width: 100%;
-    max-width: 500px;
-    padding: 30px;
+    max-width: 600px;
+    padding: 40px;
     background-color: #fff;
-    border-radius: 8px;
-    box-sizing: border-box;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    overflow: auto;
-    /* 내용이 넘칠 경우를 대비한 처리 */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    /* overflow: auto; 제거 */
 }
 
 h1 {
-    display: flex;
+    text-align: center;
     margin-top: 0;
     margin-bottom: 30px;
-    justify-content: center;
+    color: #333;
+    font-weight: 600;
 }
 
-input[type="file"] {
-    display: none;
+/* Radio Group Styling */
+.radio-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.radio-card {
+    flex: 1;
+    min-width: 120px;
+    position: relative;
+    cursor: pointer;
+}
+
+.radio-card input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.radio-label {
+    display: block;
+    padding: 12px;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #495057;
+    transition: all 0.2s;
+}
+
+.radio-card input:checked + .radio-label {
+    background-color: #e8f5e9;
+    border-color: #3CB371;
+    color: #2e7d32;
+}
+
+.radio-card:hover .radio-label {
+    border-color: #3CB371;
+}
+
+/* Drop Zone Styling */
+.drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+    color: #666;
+}
+
+.drop-zone:hover, .drop-zone.drag-over {
+    border-color: #3CB371;
+    background-color: #f0fff4;
+    color: #3CB371;
+}
+
+/* File List Styling */
+.file-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.file-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 70%;
+}
+
+.file-size {
+    color: #888;
+    font-size: 12px;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #ff6b6b;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 5px;
+    width: auto; /* override default button width */
+}
+
+.remove-btn:hover {
+    color: #fa5252;
+    background: none;
+}
+
+/* Input Group */
+.input-group {
+    display: flex;
+    gap: 10px;
 }
 
 input[type="number"],
 select {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
+    padding: 12px;
+    margin-bottom: 0; /* handled by gap */
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
 }
 
-label {
-    display: block;
-    margin-bottom: 10px;
-    text-align: left;
+.section {
+    margin-bottom: 30px;
 }
 
-button {
+.section h2 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #555;
+    border-bottom: none;
+    font-weight: 600;
+}
+
+button[type="submit"] {
     background-color: #3CB371;
     color: #fff;
-    padding: 15px 20px;
+    padding: 16px;
     border: none;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 8px;
     width: 100%;
     font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.2s;
 }
 
-button:hover {
-    background-color: #3bcd7d;
+button[type="submit"]:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+button[type="submit"]:not(:disabled):hover {
+    background-color: #2e8b57;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3CB371;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Flash Messages */
+.flash-messages {
+    margin-bottom: 20px;
+}
+
+.flash-message {
+    padding: 12px;
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-size: 14px;
 }
 
 .github-icon {
     display: flex;
-    margin-top: 20px;
+    margin-top: 30px;
     justify-content: center;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.github-icon:hover {
+    opacity: 1;
 }
 
 .github-icon a img {
-    width: 32px;
-    height: 32px;
-}
-
-#loading {
-    display: none;
-}
-
-.section {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.section h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 5px;
+    width: 28px;
+    height: 28px;
 }
 
 .custom-file-upload {

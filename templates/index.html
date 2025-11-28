@@ -10,36 +10,51 @@
 <body>
     <div class="container">
         <h1>Image Converter</h1>
+        
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
         <form method="post" enctype="multipart/form-data" id="upload-form">
             <div class="section">
                 <h2>1. 변환 방향 선택</h2>
-                <label>
-                    <input type="radio" name="convert_direction" value="image_to_pdf" checked>
-                    이미지 → PDF
-                </label>
-                <label>
-                    <input type="radio" name="convert_direction" value="pdf_to_image">
-                    PDF → 이미지
-                </label>
-                <label>
-                    <input type="radio" name="convert_direction" value="image_conversion">
-                    이미지 변환 (포맷 변경, 크기 조절 등)
-                </label>
+                <div class="radio-group">
+                    <label class="radio-card">
+                        <input type="radio" name="convert_direction" value="image_to_pdf" checked>
+                        <span class="radio-label">이미지 → PDF</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="convert_direction" value="pdf_to_image">
+                        <span class="radio-label">PDF → 이미지</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="convert_direction" value="image_conversion">
+                        <span class="radio-label">이미지 변환</span>
+                    </label>
+                </div>
             </div>
 
             <div class="section">
-                <h2>2. 이미지 또는 PDF 파일 업로드</h2>
-                <label class="custom-file-upload">
-                    <input type="file" name="files" multiple accept="image/*,application/pdf" required>
-                    파일 선택
-                </label>
-                <span id="file-name">선택된 파일이 없습니다.</span>
+                <h2>2. 파일 업로드</h2>
+                <div id="drop-zone" class="drop-zone">
+                    <p>여기로 파일을 드래그하거나 클릭하여 선택하세요.</p>
+                    <input type="file" name="files" id="file-input" multiple accept="image/*,application/pdf" style="display: none;">
+                </div>
+                <ul id="file-list" class="file-list"></ul>
             </div>
 
             <div class="section" id="resize-section">
                 <h2>3. 크기 조절 (선택 사항)</h2>
-                <input type="number" name="width" placeholder="넓이 (px)">
-                <input type="number" name="height" placeholder="높이 (px)">
+                <div class="input-group">
+                    <input type="number" name="width" placeholder="넓이 (px)">
+                    <input type="number" name="height" placeholder="높이 (px)">
+                </div>
             </div>
 
             <div class="section" id="convert-section">
@@ -55,12 +70,14 @@
                 </select>
             </div>
 
-            <button type="submit">변환하기</button>
+            <button type="submit" id="submit-btn" disabled>변환하기</button>
         </form>
-        <div id="loading" style="display: none;">
-            <p>변환 중... 다운로드가 완료될 때까지 기다려주세요.</p>
-            <button onclick="window.location.href='{{ url_for('upload_files') }}'">처음 화면으로 돌아가기</button>
+        
+        <div id="loading-overlay" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p>변환 중입니다... 잠시만 기다려주세요.</p>
         </div>
+
         <div class="github-icon">
             <a href="https://github.com/koremin/image-converter" target="_blank">
                 <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub">
@@ -69,33 +86,5 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    <script>
-        // 변환 방향에 따라 옵션 표시/숨김
-        document.addEventListener('DOMContentLoaded', function() {
-            const convertDirectionRadios = document.getElementsByName('convert_direction');
-            const resizeSection = document.getElementById('resize-section');
-            const convertSection = document.getElementById('convert-section');
-
-            function toggleSections() {
-                const selected = document.querySelector('input[name="convert_direction"]:checked').value;
-                if (selected === 'image_to_pdf') {
-                    resizeSection.style.display = 'none';
-                    convertSection.style.display = 'none';
-                } else if (selected === 'pdf_to_image') {
-                    resizeSection.style.display = 'none';
-                    convertSection.style.display = 'none';
-                } else {
-                    resizeSection.style.display = 'block';
-                    convertSection.style.display = 'block';
-                }
-            }
-
-            convertDirectionRadios.forEach(radio => {
-                radio.addEventListener('change', toggleSections);
-            });
-
-            toggleSections();  // 초기 상태 설정
-        });
-    </script>
 </body>
 </html>
